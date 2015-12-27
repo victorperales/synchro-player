@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head> 
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="Web Audio API BufferLoader Tutorial Demo"/>
+		<meta name="author" content="Obadiah Metivier"/>
+		<link rel="stylesheet" href="style.css">
+		<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+		<title>Web Audio API BufferLoader Demo</title>		
+	</head>
+	<body>
+	<div class="wrapper">
+		<div id="header">
+			<h1>Web Audio API BufferLoader Tutorial</h1>
+			<p>Demo by <a href="http://middleearmedia.com/" title="Middle Ear Media">Middle Ear Media</a></p>
+		</div>
+		<div id="content">	
+			<h2>Load multiple sounds with a BufferLoader class.</h2>
+			<h3>Play all the audio buffers together.</h3>
+				<input type="button" value="Play" onclick="loadAndPlay();" />
+			<h3>Play all the audio buffers staggered.</h3>
+				<input type="button" value="Play" onclick="loadAndPlayStaggered();" />
+			<p class="note"><span class="red">* </span><em>Keep in mind you need the latest version of Chrome, Safari or Firefox for this to work!</em></p>
+		</div>
+		<div class="push"></div>
+	</div>
+	<div class="footer">	
+		<p>Go back to the <a href="http://middleearmedia.com/web-audio-api-bufferloader/" title="Go back to the Tutorial">Web Audio API BufferLoader Tutorial</a></p>
+	</div>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js" charset="utf-8"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="buffer-loader.js"></script>
+		<script>
+var context;
+var bufferLoader;
+
+function loadAndPlay() {
+    try {
+        context = new AudioContext();
+    }
+    catch(e) {
+        alert("Web Audio API is not supported in this browser");
+    }
+
+    bufferLoader = new BufferLoader(
+        context,
+        [
+        "/home/victorperales/synchro-player/sounds/kick.wav",
+        "/home/victorperales/synchro-player/sounds/snare.wav",
+        "/home/victorperales/synchro-player/sounds/hihat.wav",
+        ],
+        finishedLoading
+    );
+
+    bufferLoader.load();
+}
+
+function loadAndPlayStaggered() {
+    try {
+        context = new AudioContext();
+    }
+    catch(e) {
+        alert("Web Audio API is not supported in this browser");
+    }
+
+    bufferLoader = new BufferLoader(
+        context,
+        [
+        "/home/victorperales/synchro-player/sounds/kick.wav",
+        "/home/victorperales/synchro-player/sounds/snare.wav",
+        "/home/victorperales/synchro-player/sounds/hihat.wav",
+        ],
+        finishedLoadingStaggered
+    );
+
+    bufferLoader.load();
+}
+
+function finishedLoading(bufferList) {
+    // Create three sources and buffers
+    var kick = context.createBufferSource();
+    var snare = context.createBufferSource();
+    var hihat = context.createBufferSource();
+    kick.buffer = bufferList[0];
+    snare.buffer = bufferList[1];
+    hihat.buffer = bufferList[2];
+    
+    kick.connect(context.destination);
+    snare.connect(context.destination);
+    hihat.connect(context.destination);	
+	// Play them together
+    kick.start(0);
+    snare.start(0);
+    hihat.start(0);	
+}
+function finishedLoadingStaggered(bufferList) {
+    // Create three sources and buffers
+    var kick = context.createBufferSource();
+    var snare = context.createBufferSource();
+    var hihat = context.createBufferSource();
+    kick.buffer = bufferList[0];
+    snare.buffer = bufferList[1];
+    hihat.buffer = bufferList[2];
+    
+    kick.connect(context.destination);
+    snare.connect(context.destination);
+    hihat.connect(context.destination);	
+	// Play them staggered
+    kick.start(0);
+    snare.start(0.125);
+    hihat.start(0.25);	
+}
+		</script>
+	<script type="text/javascript">
+
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-6856016-1']);
+	_gaq.push(['_trackPageview']);
+	
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+		
+	</script>		
+	</body>
+</html>
